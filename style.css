@@ -76,18 +76,3 @@ h1 {
     text-shadow: 0 0 3px;
     background-color: coral;
 }
-
-@media (max-width: 600px) {
-    .game-board {
-        grid-template-columns: repeat(4, 1fr);
-    }
-}
-
-@media (min-width: 601px) {
-    .game-board {
-        grid-template-columns: repeat(5, 1fr); /* Example for larger screens */
-    }
-}
-
-
-
