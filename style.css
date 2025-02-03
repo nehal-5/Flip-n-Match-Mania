@@ -112,7 +112,7 @@ h1 {
 /* Responsive Design */
 @media (max-width: 600px) {
     .game-board {
-        grid-template-columns: repeat(4, 1fr); /* Ensure 4 columns on small screens */
+        grid-template-columns: repeat(3, 1fr); /* Ensure 4 columns on small screens */
     }
 }
 
