@@ -1,46 +1,20 @@
+document.addEventListener("DOMContentLoaded", () => {
+    const emojis = ["😎", "😘", "😳", "❤️", "😂", "😁", "🥰", "😍", "😉", "😏"]; // Emoji List
+    const emojisPairs = [...emojis, ...emojis]; // Duplicate for matching pairs
 
-document.addEventListener('DOMContentLoaded', () => {
-    const emojis = ['😎', '😘', '😳', '❤️', '😂', '😁', '🥰', '😍', '😉', '😏'] // You can add more emojis if needed
-
-    // Duplicate the emojis array to create pairs
-    const emojisPairs = [...emojis, ...emojis];
-
-    const gameBoard = document.getElementById('game-board');
-    const scoreDisplay = document.getElementById('score');
-    const timerDisplay = document.getElementById('timer');
-    const restartBtn = document.getElementById('restart-btn');
+    const gameBoard = document.getElementById("game-board");
+    const scoreDisplay = document.getElementById("score");
+    const timerDisplay = document.getElementById("timer");
+    const restartBtn = document.getElementById("restart-btn");
 
     let score = 0;
     let timer = 0;
-    let timerInterval;
     let flippedCards = [];
     let matchedCards = [];
-    let timerStarted = false;
+    let timerInterval;
+    let gameStarted = false;
 
-    // Function to create card HTML
-    function createCard(emoji) {
-        const cardDiv = document.createElement('div');
-        cardDiv.classList.add('card');
-
-        const cardInner = document.createElement('div');
-        cardInner.classList.add('card-inner');
-        cardInner.dataset.emoji = emoji;
-        cardInner.addEventListener('click', flipCard);
-
-        const cardFront = document.createElement('div');
-        cardFront.classList.add('card-front');
-
-        const cardBack = document.createElement('div');
-        cardBack.classList.add('card-back');
-        cardBack.textContent = emoji;
-
-        cardInner.appendChild(cardFront);
-        cardInner.appendChild(cardBack);
-        cardDiv.appendChild(cardInner);
-        gameBoard.appendChild(cardDiv);
-    }
-
-    // Function to shuffle cards
+    // Function to shuffle array using Fisher-Yates algorithm
     function shuffle(array) {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -48,41 +22,60 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Function to start timer
+    // Function to create a card
+    function createCard(emoji) {
+        const card = document.createElement("div");
+        card.classList.add("card");
+        card.dataset.emoji = emoji; // Store emoji in dataset for easy access
+        card.addEventListener("click", flipCard);
+
+        const cardInner = document.createElement("div");
+        cardInner.classList.add("card-inner");
+
+        const cardFront = document.createElement("div");
+        cardFront.classList.add("card-front");
+
+        const cardBack = document.createElement("div");
+        cardBack.classList.add("card-back");
+        cardBack.textContent = emoji;
+
+        cardInner.appendChild(cardFront);
+        cardInner.appendChild(cardBack);
+        card.appendChild(cardInner);
+        gameBoard.appendChild(card);
+    }
+
+    // Start timer when first card is clicked
     function startTimer() {
-        timerInterval = setInterval(() => {
-            timer++;
-            timerDisplay.textContent = `Time: ${timer}s`;
-        }, 1000);
+        if (!gameStarted) {
+            gameStarted = true;
+            timerInterval = setInterval(() => {
+                timer++;
+                timerDisplay.textContent = `Time: ${timer}s`;
+            }, 1000);
+        }
     }
 
-    // Function to flip card
+    // Function to flip a card
     function flipCard() {
-        if (!timerStarted) {
-            startTimer();
-            timerStarted = true;
-        }
-        if (flippedCards.length < 2 && !this.classList.contains('flip')) {
-            this.classList.add('flip');
-            this.querySelector('.card-back').style.display = 'block';
-            flippedCards.push(this);
+        if (!gameStarted) startTimer(); // Start timer on first move
+        if (flippedCards.length >= 2 || this.classList.contains("flip") || matchedCards.includes(this)) return; // Prevent unnecessary clicks
 
-            if (flippedCards.length === 2) {
-                setTimeout(checkMatch, 1000);
-            }
+        this.classList.add("flip");
+        flippedCards.push(this);
+
+        if (flippedCards.length === 2) {
+            setTimeout(checkMatch, 700);
         }
     }
 
-    // Function to check if cards match
+    // Function to check if two flipped cards match
     function checkMatch() {
         const [card1, card2] = flippedCards;
-        const emoji1 = card1.dataset.emoji;
-        const emoji2 = card2.dataset.emoji;
-
-        if (emoji1 === emoji2) {
-            card1.removeEventListener('click', flipCard);
-            card2.removeEventListener('click', flipCard);
+        if (card1.dataset.emoji === card2.dataset.emoji) {
             matchedCards.push(card1, card2);
+            card1.removeEventListener("click", flipCard);
+            card2.removeEventListener("click", flipCard);
             score += 10;
             scoreDisplay.textContent = `Score: ${score}`;
 
@@ -90,44 +83,42 @@ document.addEventListener('DOMContentLoaded', () => {
                 endGame();
             }
         } else {
-            card1.classList.remove('flip');
-            card2.classList.remove('flip');
-            card1.querySelector('.card-back').style.display = 'none';
-            card2.querySelector('.card-back').style.display = 'none';
+            card1.classList.remove("flip");
+            card2.classList.remove("flip");
         }
-
         flippedCards = [];
     }
 
-    // Function to restart game
+    // Function to restart the game
     function restartGame() {
-        clearInterval(timerInterval);
-        gameBoard.innerHTML = '';
+        clearInterval(timerInterval); // Stop the timer
+        gameBoard.innerHTML = ""; // Clear existing cards
+        flippedCards = [];
         matchedCards = [];
         score = 0;
         scoreDisplay.textContent = `Score: ${score}`;
         timer = 0;
-        timerStarted = false;
+        gameStarted = false;
         timerDisplay.textContent = `Time: ${timer}s`;
         startGame();
     }
 
-    // Function to end game
+    // Function to end the game
     function endGame() {
         clearInterval(timerInterval);
-        alert('Congratulations! You completed the game in ' + timer + ' seconds!');
+        setTimeout(() => {
+            alert(`🎉 Congratulations! You completed the game in ${timer} seconds!`);
+        }, 500);
     }
 
-    // Function to initialize game
+    // Function to initialize the game
     function startGame() {
         shuffle(emojisPairs);
         emojisPairs.forEach(createCard);
     }
 
-    // Event listener for restart button
-    restartBtn.addEventListener('click', restartGame);
+    restartBtn.addEventListener("click", restartGame);
 
-    // Start the game
+    // Start the game when the page loads
     startGame();
 });
-
