@@ -11,7 +11,7 @@ body {
 /* Container */
 .container {
     max-width: 900px;
-    margin: 50px auto;
+    margin: 70px auto;
     padding: 20px;
     background-color: rgba(255, 255, 255, 0.15);
     border-radius: 15px;
@@ -34,10 +34,13 @@ h1 {
 /* Game Board - Responsive Grid */
 .game-board {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 cards per row */
-    gap: 12px;
+    grid-template-columns: repeat(4, 1fr); /* Ensures 4 cards per row */
+    gap: 15px; /* Space between cards */
+    justify-content: center; /* Centers grid items horizontally */
+    align-items: center; /* Centers grid items vertically */
+    max-width: 500px; /* Adjust as needed */
+    margin: 0 auto; /* Centers the game board */
     padding: 20px;
-    justify-content: center;
 }
 
 /* Card Styling */
