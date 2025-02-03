@@ -28,13 +28,11 @@ h1 {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    gap: 10px; /* Adjust spacing */
 }
 
 .card {
-    width: 100px;
-    height: 100px;
-    margin: 10px;
-    perspective: 1000px;
+    width: calc(25% - 20px); /* 4 cards per row with spacing */
 }
 
 .card-inner {
@@ -82,5 +80,18 @@ h1 {
     text-shadow: 0 0 3px;
     background-color: coral;
 }
+
+@media (max-width: 600px) {
+    .game-board {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (min-width: 601px) {
+    .game-board {
+        grid-template-columns: repeat(5, 1fr); /* Example for larger screens */
+    }
+}
+
 
 
