@@ -25,10 +25,16 @@ h1 {
 }
 
 .game-board {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 columns */
-    gap: 10px; /* Adjust spacing between cards */
+    display: flex;
+    flex-wrap: wrap;
     justify-content: center;
+}
+
+.card {
+    width: 100px;
+    height: 100px;
+    margin: 10px;
+    perspective: 1000px;
 }
 
 .card-inner {
@@ -76,3 +82,4 @@ h1 {
     text-shadow: 0 0 3px;
     background-color: coral;
 }
+
