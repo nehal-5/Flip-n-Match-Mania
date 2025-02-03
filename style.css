@@ -25,14 +25,10 @@ h1 {
 }
 
 .game-board {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 columns */
+    gap: 10px; /* Adjust spacing between cards */
     justify-content: center;
-    gap: 10px; /* Adjust spacing */
-}
-
-.card {
-    width: calc(25% - 20px); /* 4 cards per row with spacing */
 }
 
 .card-inner {
